@@ -1,0 +1,145 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "github.com/moscososirenita-design/tk-proto/gen/go/user;user";
+
+// 论坛请求。
+message TopicListRequest {
+  int32 limit = 1;
+}
+message ForumTopicsRequest {
+  int32 limit = 1;
+  string feed = 2;
+  string keyword = 3;
+  string issue = 4;
+  int32 year = 5;
+}
+message ForumTopicDetailRequest {
+  uint64 post_id = 1;
+}
+message ForumAuthorHistoryRequest {
+  uint64 user_id = 1;
+  int32 limit = 2;
+  string issue = 3;
+  int32 year = 4;
+}
+message LotteryCommentGroupsRequest {
+  uint64 lottery_info_id = 1;
+}
+message ExpertBoardsRequest {
+  int32 limit = 1;
+  string lottery_code = 2;
+}
+
+// 用户认证请求。
+message AuthSendCodeRequest {
+  string phone = 1;
+  string purpose = 2;
+}
+message AuthRegisterRequest {
+  string phone = 1;
+  string password = 2;
+  string sms_code = 3;
+  string nickname = 4;
+}
+message AuthPasswordLoginRequest {
+  string phone = 1;
+  string password = 2;
+}
+message AuthSMSLoginRequest {
+  string phone = 1;
+  string sms_code = 2;
+}
+message AuthProfileRequest {
+  string access_token = 1;
+}
+message AuthRefreshRequest {
+  string refresh_token = 1;
+}
+message AuthLogoutRequest {
+  string access_token = 1;
+}
+
+// 论坛写操作请求。
+message ForumCreatePostRequest {
+  string access_token = 1;
+  uint64 lottery_info_id = 2;
+  string title = 3;
+  string content = 4;
+  string cover_image = 5;
+}
+message ForumPostCommentsRequest {
+  uint64 post_id = 1;
+  int32 limit = 2;
+  int32 offset = 3;
+  string sort = 4;
+}
+message ForumCreateCommentRequest {
+  string access_token = 1;
+  uint64 post_id = 2;
+  uint64 parent_id = 3;
+  string content = 4;
+}
+message ForumTogglePostLikeRequest {
+  string access_token = 1;
+  uint64 post_id = 2;
+}
+message ForumToggleCommentLikeRequest {
+  string access_token = 1;
+  uint64 comment_id = 2;
+}
+
+// 关注与用户等级请求。
+message UserFollowToggleRequest {
+  string access_token = 1;
+  uint64 target_user_id = 2;
+}
+message UserFollowListRequest {
+  uint64 user_id = 1;
+  int32 limit = 2;
+  int32 offset = 3;
+}
+message UserFollowStateRequest {
+  string access_token = 1;
+  uint64 target_user_id = 2;
+}
+message UserLevelRequest {
+  uint64 user_id = 1;
+}
+
+// 消息中心请求。
+message MessageSummaryRequest {
+  string access_token = 1;
+}
+message MessageSystemListRequest {
+  string access_token = 1;
+  int32 limit = 2;
+  int32 offset = 3;
+}
+message MessageMarkSystemReadRequest {
+  string access_token = 1;
+  uint64 message_id = 2;
+  bool mark_all = 3;
+}
+message MessageConversationListRequest {
+  string access_token = 1;
+  int32 limit = 2;
+  int32 offset = 3;
+}
+message MessagePrivateListRequest {
+  string access_token = 1;
+  uint64 peer_user_id = 2;
+  int32 limit = 3;
+  int32 offset = 4;
+}
+message MessageSendPrivateRequest {
+  string access_token = 1;
+  uint64 receiver_user_id = 2;
+  string content = 3;
+}
+message MessageMarkPrivateReadRequest {
+  string access_token = 1;
+  uint64 peer_user_id = 2;
+  uint64 up_to_message_id = 3;
+}

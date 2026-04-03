@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package business;
+
+option go_package = "github.com/moscososirenita-design/tk-proto/gen/go/business;business";
+
+import "common/common_types.proto";
+import "business/lottery_types.proto";
+
+// BusinessService 业务域服务。
+service BusinessService {
+  // HomeOverview 首页聚合：banner、广播、外链、金刚导航、分类等。
+  rpc HomeOverview(common.HomeOverviewRequest) returns (common.JsonDataReply);
+  // LotteryCategories 图库分类搜索。
+  rpc LotteryCategories(common.CategoryLibraryRequest) returns (common.JsonDataReply);
+  // LiveScenePage 开奖现场整页聚合接口（单接口返回整页数据）。
+  rpc LiveScenePage(common.IDRequest) returns (common.JsonDataReply);
+  // LotteryDashboard 使用真正的 typed response。
+  rpc LotteryDashboard(common.IDRequest) returns (LotteryDashboardReply);
+  // DrawHistory / LotteryHistory 共享同一套 typed 历史结构。
+  rpc DrawHistory(common.DrawHistoryRequest) returns (LotteryHistoryReply);
+  // DrawDetail 使用真正的 typed response。
+  rpc DrawDetail(common.IDRequest) returns (LotteryDrawDetailReply);
+  rpc ListCards(common.ListCardsRequest) returns (common.JsonDataReply);
+  // LotteryDetail 彩票详情页使用 typed response。
+  rpc LotteryDetail(common.IDRequest) returns (LotteryDetailReply);
+  // LotteryHistory 共享历史开奖记录 typed response。
+  rpc LotteryHistory(common.IDRequest) returns (LotteryHistoryReply);
+  // LotteryResults 当前与 LotteryDetail 复用同一 typed 结构。
+  rpc LotteryResults(common.IDRequest) returns (LotteryDetailReply);
+  rpc VoteRecord(common.VoteRecordRequest) returns (common.JsonDataReply);
+  rpc Vote(common.VoteRequest) returns (common.JsonDataReply);
+}

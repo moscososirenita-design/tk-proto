@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package common;
+
+option go_package = "github.com/moscososirenita-design/tk-proto/gen/go/common;common";
+
+// JsonDataReply 统一响应结构。
+message JsonDataReply {
+  int32 code = 1;
+  string msg = 2;
+  string data_json = 3;
+}
+
+// 首页与分类库请求。
+message HomeOverviewRequest {}
+message CategoryLibraryRequest {
+  string keyword = 1;
+}
+
+// 开奖/图纸请求。
+message IDRequest {
+  uint64 id = 1;
+}
+message ListCardsRequest {
+  string category = 1;
+}
+message DrawHistoryRequest {
+  uint64 special_lottery_id = 1;
+  string order_mode = 2;
+  bool show_five = 3;
+  int32 limit = 4;
+}
+
+// 投票请求。
+message VoteRequest {
+  uint64 lottery_info_id = 1;
+  uint64 option_id = 2;
+  string device_id = 3;
+  string client_ip = 4;
+  string user_agent = 5;
+}
+message VoteRecordRequest {
+  uint64 lottery_info_id = 1;
+  string device_id = 2;
+  string client_ip = 3;
+  string user_agent = 4;
+}
+

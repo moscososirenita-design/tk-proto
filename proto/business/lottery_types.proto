@@ -1,0 +1,403 @@
+syntax = "proto3";
+
+package business;
+
+option go_package = "github.com/moscososirenita-design/tk-proto/gen/go/business;business";
+
+// 说明：
+// 1. 开奖区核心 RPC 已升级为 typed gRPC response；
+// 2. 以下 message 既作为 gRPC 强类型契约，也作为 BFF 对外 JSON 结构的统一来源；
+// 3. 仍保留 JsonDataReply 的次级接口，也应尽量复用同一套字段语义。
+
+// LotterySpecialLotterySummary 描述开奖区彩种摘要。
+message LotterySpecialLotterySummary {
+  uint32 id = 1;
+  string name = 2;
+  string code = 3;
+  string current_issue = 4;
+  string next_draw_at = 5;
+}
+
+// LotteryLiveSummary 描述直播/回放区块摘要。
+message LotteryLiveSummary {
+  bool show_player = 1;
+  bool has_data = 2;
+  string status = 3;
+  string stream_url = 4;
+}
+
+// LotteryNumberDetail 描述单个号码对应的规则明细。
+message LotteryNumberDetail {
+  uint32 number = 1;
+  uint32 position = 2;
+  string color_wave = 3;
+  string big_small = 4;
+  string single_double = 5;
+  string sum_single_double = 6;
+  string tail_big_small = 7;
+  string zodiac = 8;
+  string wuxing = 9;
+  string beast = 10;
+  string tail_label = 11;
+}
+
+// LotteryLabelSet 描述开奖号码对应的标签集合。
+message LotteryLabelSet {
+  repeated string pair_labels = 1;
+  repeated string color_labels = 2;
+  repeated string zodiac_labels = 3;
+  repeated string wuxing_labels = 4;
+}
+
+// LotteryDrawAnalytics 描述 draw/history/detail 共享的派生玩法字段。
+message LotteryDrawAnalytics {
+  string special_single_double = 1;
+  string special_big_small = 2;
+  string sum_single_double = 3;
+  string sum_big_small = 4;
+  string special_code = 5;
+  string normal_code = 6;
+  string zheng1 = 7;
+  string zheng2 = 8;
+  string zheng3 = 9;
+  string zheng4 = 10;
+  string zheng5 = 11;
+  string zheng6 = 12;
+}
+
+// LotteryDashboardDraw 描述首页开奖区与开奖现场头部使用的 draw 结构。
+message LotteryDashboardDraw {
+  uint32 draw_record_id = 1;
+  uint32 special_lottery_id = 2;
+  string issue = 3;
+  string draw_at = 4;
+  repeated uint32 normal_numbers = 5;
+  uint32 special_number = 6;
+  string draw_result = 7;
+  string playback_url = 8;
+  repeated uint32 numbers = 9;
+  repeated string labels = 10;
+  repeated string pair_labels = 11;
+  repeated string color_labels = 12;
+  repeated string zodiac_labels = 13;
+  repeated string wuxing_labels = 14;
+  string special_single_double = 15;
+  string special_big_small = 16;
+  string sum_single_double = 17;
+  string sum_big_small = 18;
+  string special_code = 19;
+  string normal_code = 20;
+  string zheng1 = 21;
+  string zheng2 = 22;
+  string zheng3 = 23;
+  string zheng4 = 24;
+  string zheng5 = 25;
+  string zheng6 = 26;
+}
+
+// LotteryDashboardData 描述 /public/special-lotteries/:id/dashboard 的 data_json 结构。
+message LotteryDashboardData {
+  LotterySpecialLotterySummary special_lottery = 1;
+  LotteryLiveSummary live = 2;
+  LotteryDashboardDraw draw = 3;
+}
+
+// LotteryDashboardReply 描述开奖看板 typed gRPC 响应。
+message LotteryDashboardReply {
+  int32 code = 1;
+  string msg = 2;
+  LotteryDashboardData data = 3;
+}
+
+// LotteryHistoryItemData 描述历史开奖记录单项。
+message LotteryHistoryItemData {
+  uint32 id = 1;
+  uint32 special_lottery_id = 2;
+  string special_lottery_name = 3;
+  string issue = 4;
+  int32 year = 5;
+  string draw_at = 6;
+  string draw_time = 7;
+  string normal_draw_result = 8;
+  string special_draw_result = 9;
+  string draw_result = 10;
+  repeated uint32 numbers = 11;
+  repeated string labels = 12;
+  repeated string pair_labels = 13;
+  repeated string color_labels = 14;
+  repeated string zodiac_labels = 15;
+  repeated string wuxing_labels = 16;
+  string playback_url = 17;
+  string special_single_double = 18;
+  string special_big_small = 19;
+  string sum_single_double = 20;
+  string sum_big_small = 21;
+  string special_code = 22;
+  string normal_code = 23;
+  string zheng1 = 24;
+  string zheng2 = 25;
+  string zheng3 = 26;
+  string zheng4 = 27;
+  string zheng5 = 28;
+  string zheng6 = 29;
+}
+
+// LotteryHistoryData 描述 /public/special-lotteries/:id/history 与 /public/lottery-info/:id/history 的 data_json 结构。
+message LotteryHistoryData {
+  uint32 lottery_info_id = 1;
+  uint32 special_lottery_id = 2;
+  string special_lottery_name = 3;
+  string title = 4;
+  int32 year = 5;
+  string order_mode = 6;
+  bool show_five = 7;
+  repeated LotteryHistoryItemData items = 8;
+}
+
+// LotteryHistoryReply 描述历史开奖 typed gRPC 响应。
+message LotteryHistoryReply {
+  int32 code = 1;
+  string msg = 2;
+  LotteryHistoryData data = 3;
+}
+
+// LotterySpecialResultData 描述特码玩法结果。
+message LotterySpecialResultPayload {
+  LotteryNumberDetail special = 1;
+  repeated string two_sides = 2;
+  string half_wave_color_size = 3;
+  string half_wave_color_parity = 4;
+}
+
+// LotterySpecialResultData 描述特码玩法结果。
+message LotterySpecialResultData {
+  uint32 special_number = 1;
+  string special_color_wave = 2;
+  string special_big_small = 3;
+  string special_single_double = 4;
+  string special_sum_single_double = 5;
+  string special_tail_big_small = 6;
+  string special_zodiac = 7;
+  string special_wuxing = 8;
+  string special_home_beast = 9;
+  string half_wave_color_size = 10;
+  string half_wave_color_parity = 11;
+  LotterySpecialResultPayload payload = 12;
+}
+
+// LotteryRegularResultData 描述正码及总分玩法结果。
+message LotteryRegularResultData {
+  repeated uint32 normal_numbers = 1;
+  int32 total_sum = 2;
+  string total_big_small = 3;
+  string total_single_double = 4;
+  string zheng1 = 5;
+  string zheng2 = 6;
+  string zheng3 = 7;
+  string zheng4 = 8;
+  string zheng5 = 9;
+  string zheng6 = 10;
+  repeated LotteryNumberDetail positions = 11;
+}
+
+// LotteryCountResultData 描述七码统计玩法结果。
+message LotteryCountResultData {
+  int32 total_sum = 1;
+  int32 odd_count = 2;
+  int32 even_count = 3;
+  int32 big_count = 4;
+  int32 small_count = 5;
+  int32 distinct_zodiac_count = 6;
+  int32 distinct_tail_count = 7;
+  int32 distinct_wuxing_count = 8;
+  repeated string appeared_zodiacs = 9;
+  repeated string missed_zodiacs = 10;
+  repeated string appeared_tails = 11;
+  repeated string missed_tails = 12;
+  repeated string appeared_wuxings = 13;
+}
+
+// LotteryZodiacTailResultData 描述生肖/尾数玩法结果。
+message LotteryZodiacTailResultData {
+  string special_zodiac = 1;
+  string special_home_beast = 2;
+  string special_wuxing = 3;
+  repeated string hit_zodiacs = 4;
+  repeated string miss_zodiacs = 5;
+  repeated string hit_tails = 6;
+  repeated string miss_tails = 7;
+  repeated string home_beast_zodiacs = 8;
+  repeated string wild_beast_zodiacs = 9;
+}
+
+// LotteryComboResultData 描述连码/过关等组合玩法的结算基准。
+message LotteryComboResultData {
+  repeated uint32 normal_numbers = 1;
+  repeated uint32 all_numbers = 2;
+  uint32 special_number = 3;
+}
+
+// LotteryResultBundleData 描述开奖记录详情附带的完整玩法计算结果。
+message LotteryResultBundleData {
+  LotteryLabelSet labels = 1;
+  LotterySpecialResultData special_result = 2;
+  LotteryRegularResultData regular_result = 3;
+  LotteryCountResultData count_result = 4;
+  LotteryZodiacTailResultData zodiac_tail_result = 5;
+  LotteryComboResultData combo_result = 6;
+}
+
+// LotteryDrawDetailData 描述 /public/draw-records/:id/detail 的 data_json 结构。
+message LotteryDrawDetailData {
+  uint32 id = 1;
+  uint32 special_lottery_id = 2;
+  string special_lottery_name = 3;
+  string issue = 4;
+  int32 year = 5;
+  string draw_at = 6;
+  string draw_time = 7;
+  string normal_draw_result = 8;
+  string special_draw_result = 9;
+  string draw_result = 10;
+  repeated uint32 numbers = 11;
+  repeated string labels = 12;
+  repeated string pair_labels = 13;
+  repeated string color_labels = 14;
+  repeated string zodiac_labels = 15;
+  repeated string wuxing_labels = 16;
+  string playback_url = 17;
+  string special_single_double = 18;
+  string special_big_small = 19;
+  string sum_single_double = 20;
+  string sum_big_small = 21;
+  string recommend_six = 22;
+  string recommend_four = 23;
+  string recommend_one = 24;
+  string recommend_ten = 25;
+  string special_code = 26;
+  string normal_code = 27;
+  string zheng1 = 28;
+  string zheng2 = 29;
+  string zheng3 = 30;
+  string zheng4 = 31;
+  string zheng5 = 32;
+  string zheng6 = 33;
+  LotteryResultBundleData result_bundle = 34;
+}
+
+// LotteryDrawDetailReply 描述开奖详情 typed gRPC 响应。
+message LotteryDrawDetailReply {
+  int32 code = 1;
+  string msg = 2;
+  LotteryDrawDetailData data = 3;
+}
+
+// LotteryDetailCurrentData 描述彩票详情页当前图纸与对应开奖摘要。
+message LotteryDetailCurrentData {
+  uint32 id = 1;
+  uint32 special_lottery_id = 2;
+  string title = 3;
+  string issue = 4;
+  int32 year = 5;
+  string draw_issue = 6;
+  int32 draw_year = 7;
+  uint32 draw_record_id = 8;
+  string detail_image_url = 9;
+  string draw_code = 10;
+  string normal_draw_result = 11;
+  string special_draw_result = 12;
+  string draw_result = 13;
+  repeated uint32 draw_numbers = 14;
+  repeated string draw_labels = 15;
+  repeated string color_labels = 16;
+  repeated string zodiac_labels = 17;
+  repeated string wuxing_labels = 18;
+  string playback_url = 19;
+  uint32 likes_count = 20;
+  uint32 comment_count = 21;
+  uint32 favorite_count = 22;
+  uint32 read_count = 23;
+}
+
+// LotteryIssueOption 描述详情页可切换的历史期号。
+message LotteryIssueOption {
+  uint32 id = 1;
+  string issue = 2;
+  int32 year = 3;
+}
+
+// LotteryPollOption 描述详情页投票选项。
+message LotteryPollOption {
+  uint32 id = 1;
+  string name = 2;
+  uint32 votes = 3;
+  double percent = 4;
+}
+
+// LotteryDetailBanner 描述详情页 banner。
+message LotteryDetailBanner {
+  uint32 id = 1;
+  string title = 2;
+  string image_url = 3;
+  string link_url = 4;
+  string type = 5;
+  string positions = 6;
+  string jump_type = 7;
+  uint32 jump_post_id = 8;
+  string jump_url = 9;
+  string content_html = 10;
+}
+
+// LotteryRecommendItem 描述详情页推荐图纸卡片。
+message LotteryRecommendItem {
+  uint32 id = 1;
+  string title = 2;
+  string issue = 3;
+  string cover_image_url = 4;
+}
+
+// LotteryExternalLinkItem 描述详情页外链项。
+message LotteryExternalLinkItem {
+  uint32 id = 1;
+  string name = 2;
+  string url = 3;
+}
+
+// LotteryCommentItem 描述详情页评论项。
+message LotteryCommentItem {
+  uint32 id = 1;
+  uint32 user_id = 2;
+  uint32 parent_id = 3;
+  string content = 4;
+  uint32 likes = 5;
+  string created_at = 6;
+  string username = 7;
+  string nickname = 8;
+  string avatar = 9;
+  string user_type = 10;
+}
+
+// LotteryDetailData 描述 /public/lottery-info/:id/detail 与 /public/lottery-info/:id/results 的 data 结构。
+message LotteryDetailData {
+  LotteryDetailCurrentData current = 1;
+  repeated int32 years = 2;
+  repeated LotteryIssueOption issues = 3;
+  repeated LotteryPollOption poll_options = 4;
+  bool poll_enabled = 5;
+  bool poll_default_open = 6;
+  bool show_metrics = 7;
+  repeated LotteryDetailBanner detail_banners = 8;
+  repeated LotteryRecommendItem recommend_items = 9;
+  repeated LotteryExternalLinkItem external_links = 10;
+  repeated LotteryCommentItem system_comments = 11;
+  repeated LotteryCommentItem user_comments = 12;
+  repeated LotteryCommentItem hot_comments = 13;
+  repeated LotteryCommentItem latest_comments = 14;
+}
+
+// LotteryDetailReply 描述彩票详情/结果页 typed gRPC 响应。
+message LotteryDetailReply {
+  int32 code = 1;
+  string msg = 2;
+  LotteryDetailData data = 3;
+}

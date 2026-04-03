@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "github.com/moscososirenita-design/tk-proto/gen/go/user;user";
+
+import "common/common_types.proto";
+import "user/user_types.proto";
+
+// UserService 用户域服务（当前承载论坛能力，后续扩展账号能力）。
+service UserService {
+  // 兼容旧接口：论坛帖子列表。
+  rpc TopicList(TopicListRequest) returns (common.JsonDataReply);
+  // 论坛帖子列表（新接口，支持 feed/keyword 扩展）。
+  rpc ForumTopics(ForumTopicsRequest) returns (common.JsonDataReply);
+  // 论坛帖子详情（关联开奖、作者统计、评论分组）。
+  rpc ForumTopicDetail(ForumTopicDetailRequest) returns (common.JsonDataReply);
+  // 用户历史贴列表（按用户 + 期号 + 年份筛选）。
+  rpc ForumAuthorHistory(ForumAuthorHistoryRequest) returns (common.JsonDataReply);
+  // 高手推荐榜单。
+  rpc ExpertBoards(ExpertBoardsRequest) returns (common.JsonDataReply);
+
+  // 用户认证：短信验证码发送、注册、登录、资料查询。
+  rpc SendSMSCode(AuthSendCodeRequest) returns (common.JsonDataReply);
+  rpc RegisterByPhone(AuthRegisterRequest) returns (common.JsonDataReply);
+  rpc LoginByPassword(AuthPasswordLoginRequest) returns (common.JsonDataReply);
+  rpc LoginBySMS(AuthSMSLoginRequest) returns (common.JsonDataReply);
+  rpc Profile(AuthProfileRequest) returns (common.JsonDataReply);
+  rpc RefreshToken(AuthRefreshRequest) returns (common.JsonDataReply);
+  rpc Logout(AuthLogoutRequest) returns (common.JsonDataReply);
+
+  // 彩种评论分组。
+  rpc LotteryCommentGroups(LotteryCommentGroupsRequest) returns (common.JsonDataReply);
+
+  // 论坛写操作：发帖、评论、点赞。
+  rpc ForumCreatePost(ForumCreatePostRequest) returns (common.JsonDataReply);
+  rpc ForumPostComments(ForumPostCommentsRequest) returns (common.JsonDataReply);
+  rpc ForumCreateComment(ForumCreateCommentRequest) returns (common.JsonDataReply);
+  rpc ForumTogglePostLike(ForumTogglePostLikeRequest) returns (common.JsonDataReply);
+  rpc ForumToggleCommentLike(ForumToggleCommentLikeRequest) returns (common.JsonDataReply);
+
+  // 关注关系与用户等级。
+  rpc UserFollowToggle(UserFollowToggleRequest) returns (common.JsonDataReply);
+  rpc UserFollowers(UserFollowListRequest) returns (common.JsonDataReply);
+  rpc UserFollowing(UserFollowListRequest) returns (common.JsonDataReply);
+  rpc UserFollowState(UserFollowStateRequest) returns (common.JsonDataReply);
+  rpc UserLevel(UserLevelRequest) returns (common.JsonDataReply);
+
+  // 消息中心：系统消息 + 私信会话。
+  rpc MessageSummary(MessageSummaryRequest) returns (common.JsonDataReply);
+  rpc MessageSystemList(MessageSystemListRequest) returns (common.JsonDataReply);
+  rpc MessageMarkSystemRead(MessageMarkSystemReadRequest) returns (common.JsonDataReply);
+  rpc MessageConversationList(MessageConversationListRequest) returns (common.JsonDataReply);
+  rpc MessagePrivateList(MessagePrivateListRequest) returns (common.JsonDataReply);
+  rpc MessageSendPrivate(MessageSendPrivateRequest) returns (common.JsonDataReply);
+  rpc MessageMarkPrivateRead(MessageMarkPrivateReadRequest) returns (common.JsonDataReply);
+}
